@@ -21,7 +21,7 @@ This project provides a simple proxy API for POST form data requests. It's built
 
 1. Docker:
     ```sh
-   docker run -d -p 9900:80 --name proxy-api ghcr.io/thecaliskan/proxy-api
+   docker run -d -p 9900:80  --pull always --name proxy-api ghcr.io/thecaliskan/proxy-api
     ```
 
 2. Binary:
