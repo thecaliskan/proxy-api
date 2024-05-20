@@ -38,7 +38,10 @@ func receiveHandler(ctx *fasthttp.RequestCtx) {
 func sendErrorResponse(ctx *fasthttp.RequestCtx, statusCode int, message string) {
 	ctx.SetContentType("application/json")
 	ctx.SetStatusCode(statusCode)
-	response := map[string]interface{}{"status": false, "message": message}
+	response := Response{
+		Status:  false,
+		Message: message,
+	}
 	_ = json.NewEncoder(ctx).Encode(response)
 }
 
@@ -47,4 +50,9 @@ func getPort() string {
 		return p
 	}
 	return "9900"
+}
+
+type Response struct {
+	Status  bool   `json:"status"`
+	Message string `json:"message"`
 }

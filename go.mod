@@ -1,4 +1,4 @@
-module proxy-api
+module proxy
 
 go 1.22
 
