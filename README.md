@@ -25,7 +25,7 @@ This project provides a simple proxy API for POST form data requests. It's built
     ```
 
 2. Binary:
-    Download [release](https://github.com/thecaliskan/proxy-api/releases), extract and run command on cli
+    Download [release](https://github.com/thecaliskan/proxy-api/releases/latest/download/proxy-api.tar.gz), extract and run command on cli
     ```sh
    ./proxy-api
     ```
