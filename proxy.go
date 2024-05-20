@@ -9,7 +9,8 @@ import (
 
 func main() {
 	port := getPort()
-	fmt.Printf("Server listening on port %s...\n", port)
+	fmt.Printf("# Proxy API\n")
+	fmt.Printf("# Server listening on port %s...\n", port)
 	fasthttp.ListenAndServe(":"+port, receiveHandler)
 }
 
