@@ -16,6 +16,7 @@ func main() {
 
 func requestHandler(ctx *fasthttp.RequestCtx) {
 	targetURL := string(ctx.Request.Header.Peek("X-Proxy-Url"))
+	ctx.Request.Header.Del("X-Proxy-Url")
 	if targetURL == "" {
 		sendErrorResponse(ctx, fasthttp.StatusBadRequest, "Missing X-Proxy-Url header")
 		return
