@@ -1,14 +1,14 @@
 # Proxy API
 
-Proxy API for handling POST form data requests.
+Proxy API for handling requests.
 
 ## Overview
 
-This project provides a simple proxy API for POST form data requests. It's built with Go and includes Docker support for easy deployment.
+This project provides a simple proxy API for requests. It's built with Go and includes Docker support for easy deployment.
 
 ## Features
 
-- Proxy POST form data requests.
+- Proxy requests.
 - Built with Go.
 - Docker support.
 
@@ -36,13 +36,35 @@ Configuration options can be set via environment variables:
 
 - PROXY_API_PORT: The port on which the server will run (default: 9900, docker: 80).
 
-## Example
+## Examples
 ```sh
-    curl --location 'localhost:9900' \
-        --header 'proxy-url: https://httpbin.org/post' \
+    curl --location 'localhost:9900'  \
+        --header 'X-Proxy-Url: https://httpbin.org/get'
+```
+```sh
+    curl --location 'localhost:9900' --request POST \
+        --header 'X-Proxy-Url: https://httpbin.org/post' \
+        --header 'Content-Type: application/json' \
+        --data '{
+            "john": "doe",
+            "foo": "bar"
+        }'
+```
+```sh
+    curl --location 'localhost:9900' --request POST \
+        --header 'X-Proxy-Url: https://httpbin.org/post' \
         --header 'Content-Type: application/x-www-form-urlencoded' \
         --data-urlencode 'john=doe' \
         --data-urlencode 'foo=bar'
+```
+```sh
+    curl --location 'localhost:9900' --request PUT  \
+        --header 'X-Proxy-Url: https://httpbin.org/put' \
+        --header 'Content-Type: application/json' \
+        --data '{
+            "john": "doe",
+            "foo": "bar"
+        }'
 ```
 ## Development
 

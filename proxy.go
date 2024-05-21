@@ -11,29 +11,33 @@ func main() {
 	port := getPort()
 	fmt.Printf("# Proxy API\n")
 	fmt.Printf("# Server listening on port %s...\n", port)
-	fasthttp.ListenAndServe(":"+port, receiveHandler)
+	fasthttp.ListenAndServe(":"+port, requestHandler)
 }
 
-func receiveHandler(ctx *fasthttp.RequestCtx) {
-	if string(ctx.Method()) != fasthttp.MethodPost {
-		sendErrorResponse(ctx, fasthttp.StatusMethodNotAllowed, "Only POST requests are allowed")
-		return
-	}
-
-	targetURL := string(ctx.Request.Header.Peek("proxy-url"))
+func requestHandler(ctx *fasthttp.RequestCtx) {
+	targetURL := string(ctx.Request.Header.Peek("X-Proxy-Url"))
 	if targetURL == "" {
-		sendErrorResponse(ctx, fasthttp.StatusBadRequest, "Missing proxy-url header")
+		sendErrorResponse(ctx, fasthttp.StatusBadRequest, "Missing X-Proxy-Url header")
 		return
 	}
 
-	statusCode, body, err := fasthttp.Post(nil, targetURL, ctx.PostArgs())
-	if err != nil {
-		sendErrorResponse(ctx, fasthttp.StatusInternalServerError, "Failed to send: "+err.Error())
+	req := fasthttp.AcquireRequest()
+	resp := fasthttp.AcquireResponse()
+	defer fasthttp.ReleaseRequest(req)
+	defer fasthttp.ReleaseResponse(resp)
+
+	ctx.Request.Header.CopyTo(&req.Header)
+	req.SetBody(ctx.PostBody())
+	req.SetRequestURI(targetURL)
+	req.Header.SetUserAgent("Proxy API")
+
+	if err := fasthttp.Do(req, resp); err != nil {
+		sendErrorResponse(ctx, fasthttp.StatusInternalServerError, err.Error())
 		return
 	}
 
-	ctx.SetStatusCode(statusCode)
-	ctx.SetBody(body)
+	resp.Header.CopyTo(&ctx.Response.Header)
+	ctx.SetBody(resp.Body())
 }
 
 func sendErrorResponse(ctx *fasthttp.RequestCtx, statusCode int, message string) {
