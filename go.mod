@@ -1,6 +1,6 @@
 module proxy
 
-go 1.25
+go 1.25.5
 
 require github.com/valyala/fasthttp v1.68.0
 
